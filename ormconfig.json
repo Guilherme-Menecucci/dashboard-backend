@@ -1,0 +1,19 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": "3306",
+  "username": "Aowjs92_S2j",
+  "password": "6oA*7d1l",
+  "database": "confpriv_928s2",
+  "entities": [
+    "./src/**/entities/*.ts"
+  ],
+  "migrations": [
+    "./src/shared/infra/typeorm/migrations/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/shared/infra/typeorm/migrations"
+  },
+  "logging": true,
+  "logger": "file"
+}
