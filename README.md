@@ -1,204 +1,73 @@
-```
-📦 api
-┣ 📁 dist                                     // Stands for Distribution
-┣ 📁 coverage                                 // What portion of the code did the tests cover
-┣ 📁 src                                      // Stands for Source
-┃ ┣ 📁 @types/                                // Definition / Redefinition of types of a package
-┃ ┃
-┃ ┣ 📁 config/                                // Files for configuration of application
-┃ ┃ ┗ 📄 auth.ts                              // Configuration for Token Authentication
-┃ ┃
-┃ ┣ 📁 modules                                // Management of FR (Functional Requirements)
-┃ ┃ ┗ 📁 users
-┃ ┃   ┣ 📁 dtos                               // Interfaces for DTOS (Data Transfer Object)
-┃ ┃   ┃ ┗ 📄 ICreateUserDTO.ts                // DTO for Create a User
-┃ ┃   ┃
-┃ ┃   ┣ 📁 infra                              // Management of NFR (Non-Functional Requirements, Technologies that will be used, e.g. `express` and `typeorm`)
-┃ ┃   ┃ ┣ 📁 http                             // Management of HTTP protocols
-┃ ┃   ┃ ┃ ┣ 📁 routes                         // Routes definition
-┃ ┃   ┃ ┃ ┗ 📁 controlers                     // Management of routes
-┃ ┃   ┃ ┃
-┃ ┃   ┃ ┗ 📁 typeorm                          // Management of database
-┃ ┃   ┃   ┣ 📁 entities                       // Classes that represent a table
-┃ ┃   ┃   ┗ 📁 repositories                   // Entities Manipulation
-┃ ┃   ┃
-┃ ┃   ┣ 📁 repositories                       // Interface for `Liskov Substitution Principle`
-┃ ┃   ┃ ┣ 📁 fakes                            // Fakes repositories (Used for Unit Testing, since Unit Testing are isolated tests)
-┃ ┃   ┃ ┗ 📄 *.spec.ts                        // Unit Testing (Individual units/components of a software are tested)
-┃ ┃   ┃
-┃ ┃   ┗ 📁 services                           // Management of FR (with Business Rules: Processes to form systems that get things done, e.g. I cannot register a new user if the login has already been registered)
-┃ ┃
-┃ ┗ 📁 shared                                 // Management of Shared NFR
-┃   ┣ 📁 container                            // Automatic injection of `infra` dependencies in `services` (Dependency Inversion, "A Business Rule doesn't need to know about Non-Functional Requirements")
-┃   ┃
-┃   ┣ 📁 enums
-┃   ┃
-┃   ┣ 📁 errors                               // Classes for management of errors
-┃   ┃
-┃   ┗ 📁 infra
-┃     ┣ 📁 http
-┃     ┃ ┣ 📁 middlewares
-┃     ┃ ┃ ┣ 📄 ensureAuthenticated.ts         // Middleware for ensure that user will be logged-in
-┃     ┃ ┃ ┗ 📄 handleErros.ts                 // Middleware for catch errors (will be thrown by `thow new Error()`)
-┃     ┃ ┃
-┃     ┃ ┣ 📁 routes                           // Has the main routes file
-┃     ┃ ┃
-┃     ┃ ┗ 📄 server.ts                        // Main Server file
-┃     ┃
-┃     ┗ 📁 typeorm
-┃       ┣ 📁 migrations
-┃       ┃ ┣ 📄 1599223547CreateUser.ts        // Create User Table
-┃       ┃ ┗ 📄 1599226022InsertCPFUser.ts     // Insert a new column named cpf in User table
-┃       ┃
-┃       ┗ 📄 index.ts                         // File to typeorm start connection with database
-┃
-┣ 📄 .editorconfig                            // IDE configuration
-┣ 📄 .eslintignore                            // Paths/Files to eslint ignore
-┣ 📄 .eslint.json                             // Eslint configuration
-┣ 📄 jest.config.ts                           // Jest Configuration (Unit Test)
-┣ 📄 ormconfig.json                           // Typeorm Configuration
-┣ 📄 package.json                             // Information about this package
-┣ 📄 prettier.config.js                       // Prettier configuration
-┗ 📄 tsconfig.json                            // Typescript configuration
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Installation
+
+```bash
+$ npm install
 ```
 
-# Recuperação de senha
+## Running the app
 
-  **RF**
+```bash
+# development
+$ npm run start
 
-  - [X] O usuário deve poder recuperar sua senha informando o seu login
-  - [X] O usuário deve receber um e-mail com instruções de recuperação de senha
-  - [X] O usuário deve poder resetar sua senha
+# watch mode
+$ npm run start:dev
 
-  **RNF**
+# production mode
+$ npm run start:prod
+```
 
-  - [X] Utilizar Ethereal para testar em ambiente de desenvolvimento
-  - [X] Utilizar Servidor de e-mail próprio para envio em produção
-  - [-] O envio de e-mail deve acontecer em segundo plano (background job)
+## Test
 
-  **RN**
+```bash
+# unit tests
+$ npm run test
 
-  - [X] O link enviado por e-mail para resetar senha, deve expirar em 2h
-  - [ ] O usuário precisa confirmar a nova senha ao resetar sua senha
+# e2e tests
+$ npm run test:e2e
 
-# Painel do usuário
+# test coverage
+$ npm run test:cov
+```
 
-  **RF**
+## Support
 
-  - [X] O usuário deve poder listar todos os usuários cadastrados de um cliente
-  - [X] O usuário deve poder cadastrar um novo usuário
-  - [X] O usuário deve poder editar um usuário já cadastrado
-  - [X] O usuário deve poder pocurar um usuário pelo nome / login
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-  **RNF**
+## Stay in touch
 
-  - [X] A listagem de usuários deve ser armazenada em cache
-  - [ ] Conferir listagem com a TrueConf
-  - [ ] Criar usuário na TrueConf
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-  **RN**
+## License
 
-  - [X] Não pode cadastar / alterar para um e-mail que já exista
-  - [X] Não pode cadastar / alterar para um login que já exista
-  - [ ] O usuário não deve poder inserir / retirar dos grupos que não possua
-  - [ ] O usuário não deve poder inserir / retirar das permissões que não possua
-  - [ ] O usuário não deve poder inserir / retirar das sustentações que não possua
-
-# Painel de conferência
-
-  **RF**
-
-  - [X] O usuário deve poder listar todos as conferências cadastradas de um cliente
-  - [X] O usuário deve poder cadastrar uma nova conferência
-  - [x] O usuário deve poder editar uma conferência já cadastrada
-  - [ ] O usuário deve ser capaz de agendar grupos, ou relacionar os usuários no momento da criação, por dia da semana para as conferências
-
-  **RNF**
-
-  - [X] A listagem de conferências deve ser armazenada em cache
-
-  **RN**
-
-  - [-] Não deve poder cadastrar para grupos que não possua ou não seja agendada (-1)
-  - [x] Pode existir várias conferências com os mesmos dados
-
-# Envio de e-mails das conferências
-
-  **RF**
-
-  - [ ] O usuário deve poder selecionar qualquer usuário que possa participar da conferência
-  - [ ] Caso a conferência seja agendada, o usuário deve poder selecionar para qual dia deseja listar os usuários
-  - [ ] O usuário deve poder adicionar um assunto ao e-mail
-  - [ ] O usuário deve poder adicionar um corpo ao e-mail
-
-  **RNF**
-
-  - [X] Utilizar Ethereal para testar em ambiente de desenvolvimento
-  - [X] Utilizar Servidor de e-mail próprio para envio em produção
-
-# Painel de grupo
-
-  **RF**
-
-  - [X] O usuário deve poder listar todos os grupos cadastrados de um cliente
-  - [X] O usuário deve poder cadastrar um novo grupo
-  - [X] O usuário deve poder editar um grupo já cadastrado
-  - [ ] O usuário deve poder selecionar qualquer usuário cadastrado no sistema
-
-  **RNF**
-
-  - [X] A listagem de grupos deve ser armazenada em cache
-
-  **RN**
-
-  - [X] Não pode existir dois grupos com o mesmo nome
-
-# Painel de sustentações
-
-  **RF**
-
-  - [ ] O usuário deve poder listar todas as sustentações que possa visualizar
-  - [ ] O usuário deve poder cadastrar uma nova sustentação
-  - [ ] O usuário deve poder editar uma sustenatação
-  - [ ] O usuário deve poder editar usuário avulsos já adicionados (Nome, Telefone, Email, Processos)
-  - [ ] Caso tenha novos usuários, O usuário deve poder editar o assunto e o corpo do email que será enviado
-
-  **RNF**
-
-  - [ ] A listagem de sustentações deve ser armazenada em cache
-  - [X] Utilizar Ethereal para testar em ambiente de desenvolvimento
-  - [X] Utilizar Servidor de e-mail próprio para envio em produção
-
-  **RN**
-
-  - [ ] O usuário deve selecionar um grupo que ele possua permissão
-  - [ ] Não pode agendar uma sustentação para o passado
-  - [ ] Não pode existir duas sustentações para o mesmo grupo no mesmo dia
-  - [ ] Será criado um token para o usuário avulso criado XXX-XXX-XXX
-  - [ ] Editar um usuário avulso não deverá trocar o token do mesmo
-  - [ ] O email deve ser enviado apenas aos novos usuários
-
-# Painel de relatório - Chats
-
-  **RF**
-
-  - [ ] O usuário deve ser capaz de selecionar uma data que haja conferência com chat público
-  - [ ] O usuário deve ser capaz de selecionar uma conferência com chat público
-  - [ ] O usuário deve ser capaz de pegar todo o chat público da conferência selecionada no dia selecionado
-
-  **RNF**
-
-  - [ ] A listagem de conferencia por dia deve ser armazenada em cache
-
-# Painel de relatório - Ações da Conferência
-
-  **RF**
-
-  - [ ] O usuário deve ser capaz de selecionar uma data que haja conferência
-  - [ ] O usuário deve ser capaz de selecionar uma conferência
-  - [ ] O usuário deve ser capaz de pegar todo o log de ações da conferência selecionada no dia selecionado
-
-  **RNF**
-
-  - [ ] A listagem de conferencia por dia deve ser armazenada em cache
-  - [ ] O log de ações deve ser armazenada em cache
+Nest is [MIT licensed](LICENSE).
