@@ -1,0 +1,85 @@
+name: Next.js CD
+
+on:
+  workflow_run:
+    workflows: ['Test']
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  build:
+    name: Build and Package
+    runs-on: ubuntu-latest
+    environment: Production
+    permissions:
+      id-token: write
+      contents: read
+
+    strategy:
+      matrix:
+        node-version: [latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3.4.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: latest
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Test Build
+        run: pnpm build
+        env:
+          APP_WEB_URL: ${{ secrets.APP_WEB_URL }}
+          COOKIE_DAYS_EXPIRE: ${{ secrets.COOKIE_DAYS_EXPIRE }}
+          CLIENT_GITHUB_ID: ${{ secrets.CLIENT_GITHUB_ID }}
+          CLIENT_GITHUB_SECRET: ${{ secrets.CLIENT_GITHUB_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: Production
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v3.4.0
+
+      - name: Configure SSH
+        env:
+          USER_NAME: ${{ secrets.AWS_USERNAME }}
+          HOSTNAME: ${{ secrets.AWS_HOSTNAME }}
+          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$PRIVATE_KEY" > ~/.ssh/production.key
+          chmod 400 ~/.ssh/production.key
+          cat >>~/.ssh/config <<END
+          Host production
+            HostName $HOSTNAME
+            User $USER_NAME
+            IdentityFile ~/.ssh/production.key
+            StrictHostKeyChecking no
+          END
+
+      - name: Check out the source
+        env:
+          USER_NAME: ${{ secrets.AWS_USERNAME }}
+        run: ssh production 'cd /home/ec2-user/dashboard-backend && git fetch && git reset --hard origin/main'
+
+      - name: Start the server
+        if: ${{ always() }}
+        run: ssh production 'cd /home/ec2-user/dashboard-backend && pnpm install && pnpm build && pm2 restart 2'
