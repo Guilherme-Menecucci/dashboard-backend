@@ -23,6 +23,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    console.error(exception);
+
     const responseBody = {
       statusCode: httpStatus,
       timestamp: new Date().toISOString(),

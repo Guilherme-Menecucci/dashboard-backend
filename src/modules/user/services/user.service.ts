@@ -3,26 +3,16 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'src/modules/shared/services/prisma.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { PasswordService } from '../../shared/services/password.service';
 
 @Injectable()
-export class UsersService {
-  constructor(
-    @Inject(PrismaService) private prismaService: PrismaService,
-    @Inject(PasswordService) private passwordService: PasswordService,
-  ) {}
+export class UserService {
+  constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
     const createUser: CreateUserDto = {
       name: createUserDto.name,
-      email: createUserDto.email,
       image: createUserDto.image,
     };
-
-    if (createUserDto.password)
-      createUser.password = await this.passwordService.hashPassword(
-        createUserDto.password,
-      );
 
     const createdUser = this.prismaService.user.create({ data: createUser });
 
@@ -33,11 +23,9 @@ export class UsersService {
     return createdUser;
   }
 
-  async findOrCreate(createUserDto: CreateUserDto) {
-    const { email } = createUserDto;
-
+  async findOrCreate(id: string, createUserDto: CreateUserDto) {
     const foundUser = await this.prismaService.user.findUnique({
-      where: { email: email },
+      where: { id },
     });
 
     if (!!foundUser) {
@@ -51,8 +39,8 @@ export class UsersService {
     return this.prismaService.user.findMany();
   }
 
-  async findOne({ id = '', email = '' }: Partial<User>) {
-    return this.prismaService.user.findUnique({ where: { email, id } });
+  async findOne({ id = '' }: Partial<User>) {
+    return this.prismaService.user.findUnique({ where: { id } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

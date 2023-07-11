@@ -1,11 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { Account, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/modules/shared/services/prisma.service';
+
+import { PrismaService } from '~@modules/shared/services/prisma.service';
+
 import { CreateAccountDto } from '../dto/create-account.dto';
 import { UpdateAccountDto } from '../dto/update-account.dto';
 
 @Injectable()
-export class AccountsService {
+export class AccountService {
   constructor(@Inject(PrismaService) private prismaService: PrismaService) {}
 
   async create(createAccountDto: CreateAccountDto) {
@@ -38,8 +41,8 @@ export class AccountsService {
     return this.create(createAccountDto);
   }
 
-  async findAll() {
-    return this.prismaService.account.findMany();
+  async findAll(userId: string) {
+    return this.prismaService.account.findMany({ where: { userId } });
   }
 
   async findOne({
@@ -58,14 +61,9 @@ export class AccountsService {
       where = { provider_providerAccountId: { provider, providerAccountId } };
     }
 
-    return this.prismaService.account.findUnique({ where });
-  }
-
-  async update(id: number, updateaAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  async remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.prismaService.account.findUnique({
+      where,
+      include: { user: true },
+    });
   }
 }
